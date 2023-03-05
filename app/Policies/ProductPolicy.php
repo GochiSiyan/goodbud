@@ -18,7 +18,7 @@ class ProductPolicy
      */
     public function viewAny(User $user)
     {
-        return auth()->check();
+        return $user->role === User::ROLE_ADMIN;
     }
 
     /**
@@ -30,7 +30,7 @@ class ProductPolicy
      */
     public function view(User $user, Product $product)
     {
-        return auth()->check();
+        return $product->active ? auth()->check() : $user->role === User::ROLE_ADMIN;
     }
 
     /**

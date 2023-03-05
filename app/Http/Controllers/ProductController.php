@@ -15,7 +15,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return request()->json(Product::all());
+        return request()->json(Product::whereActive(true)::all());
     }
 
     /**
