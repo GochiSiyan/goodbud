@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
+use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
-use App\Models\Product;
 
 class ProductController extends Controller
 {
@@ -15,7 +16,12 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return request()->json(Product::whereActive(true)::all());
+        if (!Gate::allows('viewAny', ProductCategory::class)) {
+            return request()->json(Product::whereActive(true)::all());
+        }
+        return response()->json(
+            Product::all()
+        );
     }
 
     /**
@@ -39,6 +45,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
+        $this->authorize('view', ProductCategory::class);
         return response()->json($product);
     }
 

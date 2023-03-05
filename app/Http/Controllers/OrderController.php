@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\Order;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
-use App\Models\Order;
 
 class OrderController extends Controller
 {
@@ -15,7 +17,12 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        if (!Auth::check()) abort(403, 'You are restricted to view this page.');
+        $user = Auth::user();
+        if ($user->role === User::ROLE_ADMIN) {
+            return response()->json(Order::all());
+        }
+        return response()->json(Order::whereUserId($user->id)::all());
     }
 
     /**

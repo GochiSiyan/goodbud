@@ -35,7 +35,7 @@ class ProductCategoryPolicy
      */
     public function view(User $user, ProductCategory $productCategory)
     {
-        return $this->policy($user);
+        return $productCategory->active || $this->policy($user);
     }
 
     /**
