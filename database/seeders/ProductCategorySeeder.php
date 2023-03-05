@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Product;
 use App\Models\ProductCategory;
 use Illuminate\Database\Seeder;
 
@@ -16,7 +17,7 @@ class ProductCategorySeeder extends Seeder
     {
         ProductCategory::factory()
             ->count(10)
-            // ->has(Product::factory()->count(5))
+            ->has(Product::factory()->count(5))
             ->create();
     }
 }
