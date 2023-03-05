@@ -17,9 +17,10 @@ class ProductCategoryController extends Controller
     public function index()
     {
         if (!Gate::allows('viewAny', ProductCategory::class)) {
-            abort(403, 'Unauthorized action.');
+            return response()->json(
+                ProductCategory::whereActive(true)::all()
+            );
         }
-        $categories = ProductCategory::all();
         return response()->json(
             ProductCategory::all()
         );
