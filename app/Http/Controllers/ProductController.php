@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\ProductSearchRequest;
 use App\Http\Requests\UpdateProductRequest;
 
 class ProductController extends Controller
@@ -14,14 +15,29 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(ProductSearchRequest $request)
     {
+        $validated = $request->validated();
+        $query = Product::query();
         if (!Gate::allows('viewAny', ProductCategory::class)) {
-            return request()->json(Product::whereActive(true)::all());
+            $query = $query->whereActive(true);
         }
-        return response()->json(
-            Product::all()
-        );
+        if ($validated['name']) {
+            $query->where('name', 'like', '%'.$validated['name'].'%');
+            $query->orWhereHas('productCategory', function ($q) use ($validated) {
+                $q->where('name', 'like', '%'.$validated['name'].'%');
+            });
+        }
+
+        if ($validated['time']) {
+            $query->orderBy('created_at', $validated['time']);
+        }
+
+        if ($validated['price']) {
+            $query->orderBy('price', $validated['price']);
+        }
+
+        return response()->json($query->get());
     }
 
     /**
