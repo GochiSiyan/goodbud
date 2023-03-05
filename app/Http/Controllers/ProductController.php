@@ -19,21 +19,22 @@ class ProductController extends Controller
     {
         $validated = $request->validated();
         $query = Product::query();
+        $query->with('productCategory');
         if (!Gate::allows('viewAny', ProductCategory::class)) {
             $query = $query->whereActive(true);
         }
-        if ($validated['name']) {
+        if (isset($validated['name'])) {
             $query->where('name', 'like', '%'.$validated['name'].'%');
             $query->orWhereHas('productCategory', function ($q) use ($validated) {
                 $q->where('name', 'like', '%'.$validated['name'].'%');
             });
         }
 
-        if ($validated['time']) {
+        if (isset($validated['time'])) {
             $query->orderBy('created_at', $validated['time']);
         }
 
-        if ($validated['price']) {
+        if (isset($validated['price'])) {
             $query->orderBy('price', $validated['price']);
         }
 

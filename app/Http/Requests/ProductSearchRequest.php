@@ -26,7 +26,7 @@ class ProductSearchRequest extends FormRequest
         return [
             'name' => 'sometimes|string',
             'time' => 'sometimes|required|in_array:ASC,DESC',
-            'price' => 'sometimes|required|in_array:ASC,DESC',
+            'price' => 'sometimes|required|in:ASC,DESC',
         ];
     }
 }
