@@ -16,10 +16,10 @@ class ProductCategoryController extends Controller
      */
     public function index()
     {
-        if (!Gate::allows('viewAny', ProductCategory::class)) {
+        if (Gate::denies('viewAny', ProductCategory::class)) {
             return response()->json(
-                ProductCategory::whereActive(true)::all()
-            );
+                ProductCategory::whereActive(true)->get()
+                );
         }
         return response()->json(
             ProductCategory::all()
