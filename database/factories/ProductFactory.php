@@ -14,9 +14,9 @@ class ProductFactory extends Factory
      */
     public function definition()
     {
-        $productCategory = ProductCategory::inRandomOrder()->first();
+        // $productCategory = ProductCategory::inRandomOrder()->first();
         return [
-            'product_category_id' => $productCategory->id,
+            // 'product_category_id' => $productCategory->id,
             'name' => $this->faker->name,
             'price' => rand(1000, 100000),
             'active' => $this->faker->boolean,
